@@ -33,10 +33,10 @@ jobs:
           if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
 
       - name: Run Black (check)
-        run: black --check .
+        run: black --check . --exclude "(chatbotenv|roberta_chatbot_model)"
 
       - name: Run isort (check)
-        run: isort --check-only .
+        run: isort --check-only . --skip chatbotenv --skip roberta_chatbot_model
 
       - name: Run flake8
         run: flake8 .

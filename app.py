@@ -20,14 +20,31 @@ import pandas as pd
 import torch
 import torch.nn.functional as F
 from transformers import RobertaForSequenceClassification, RobertaTokenizer
+from huggingface_hub import snapshot_download
 
 app = Flask(__name__)
 
 # --------------------------
-# Load trained RoBERTa model & tokenizer
+# Ensure model is available (download from HF Hub if needed)
 # --------------------------
-model = RobertaForSequenceClassification.from_pretrained("roberta_chatbot_model")
-tokenizer = RobertaTokenizer.from_pretrained("roberta_chatbot_model")
+MODEL_DIR = os.environ.get("MODEL_PATH", "roberta_chatbot_model")
+HF_MODEL_ID = os.environ.get("HF_MODEL_ID")
+HF_TOKEN = os.environ.get("HF_TOKEN")
+
+if not os.path.isdir(MODEL_DIR):
+    if HF_MODEL_ID:
+        try:
+            print(f"Model not found locally — downloading {HF_MODEL_ID}...")
+            snapshot_download(repo_id=HF_MODEL_ID, local_dir=MODEL_DIR, token=HF_TOKEN)
+        except Exception as e:
+            print("Warning: failed to download model from HF Hub:", e)
+    else:
+        print(
+            "Model directory not found and HF_MODEL_ID not set. Expect runtime errors"
+        )
+
+model = RobertaForSequenceClassification.from_pretrained(MODEL_DIR)
+tokenizer = RobertaTokenizer.from_pretrained(MODEL_DIR)
 encoder = joblib.load("label_encoder.pkl")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
