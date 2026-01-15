@@ -35,7 +35,9 @@ if not os.path.isdir(MODEL_DIR):
     if HF_MODEL_ID:
         try:
             print(f"Model not found locally — downloading {HF_MODEL_ID}...")
-            snapshot_download(repo_id=HF_MODEL_ID, local_dir=MODEL_DIR, token=HF_TOKEN)
+            snapshot_download(
+                repo_id=HF_MODEL_ID, local_dir=MODEL_DIR, token=HF_TOKEN
+            )
         except Exception as e:
             print("Warning: failed to download model from HF Hub:", e)
     else:
