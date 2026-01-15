@@ -94,7 +94,10 @@ for epoch in range(epochs):
 
         running_loss += loss.item()
         if (i + 1) % 10 == 0:
-            print(f"Batch {i+1}/{len(dataloader)} - Loss: {running_loss/10:.4f}")
+            avg_loss = running_loss / 10
+            print(
+                f"Batch {i+1}/{len(dataloader)} - Loss: {avg_loss:.4f}"
+            )
             running_loss = 0
 
 # --------------------------

@@ -11,7 +11,8 @@ try:
     if env_path.exists():
         load_dotenv(dotenv_path=env_path)
 except Exception:
-    # python-dotenv is optional in some environments; ignore if not installed
+    # python-dotenv is optional in some environments.
+    # Ignore if not installed.
     pass
 import joblib
 import pandas as pd
