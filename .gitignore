@@ -1,0 +1,101 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+chatbotenv/
+venv/
+ENV/
+env/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# macOS
+.DS_Store
+
+# model and large artifacts
+roberta_chatbot_model/
+
+# dotenv
+.env
+env.local
+
+# Python test / coverage
+.pytest_cache/
+coverage.xml
+htmlcov/
+# Virtual Environment
+chatbotenv/
+venv/
+env/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files (optional - remove if you want to track them)
+# *.pkl
+# *.joblib
+
+# Environment variables
+.env
+.env.local

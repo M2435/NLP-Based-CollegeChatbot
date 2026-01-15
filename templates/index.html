@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark {
+            background: #1e1e1e;
+            color: #fff;
+        }
+
+        .chat-box {
+            background: #fff;
+            width: 450px;
+            max-width: 90%;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .chat-box.dark {
+            background: #2b2b2b;
+            color: #fff;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #007bff, #00c6ff);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-log {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f5f5f5;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .chat-box.dark .chat-log {
+            background: #3b3b3b;
+            color: #fff;
+        }
+
+        .message {
+            display: flex;
+            margin: 8px 0;
+            align-items: flex-end;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        .message.user { justify-content: flex-end; }
+        .message.bot { justify-content: flex-start; }
+
+        .message span {
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 70%;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .message.user span { background: #007bff; color: white; }
+        .chat-box.dark .message.user span { background: #3399ff; }
+
+        .message.bot span { background: #e0e0e0; color: black; }
+        .chat-box.dark .message.bot span { background: #555; color: #fff; }
+
+        .input-box {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            outline: none;
+            font-size: 1em;
+            background: #fff;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .chat-box.dark #user-input {
+            background: #3b3b3b;
+            color: #fff;
+        }
+
+        button.send-btn {
+            padding: 0 20px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .quick-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .quick-buttons button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 15px;
+            background: #00c6ff;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+
+        .quick-buttons button:hover { background: #007bff; }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toggle-theme-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #fff;
+            color: #007bff;
+            font-weight: bold;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .chat-box.dark .toggle-theme-btn {
+            background: #333;
+            color: #00c6ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-box" id="chat-box">
+        <div class="chat-header">
+            🎓 College Chatbot
+            <button class="toggle-theme-btn" onclick="toggleTheme()">🌙</button>
+        </div>
+        <div class="chat-log" id="chat-log"></div>
+        <div class="input-box">
+            <input type="text" id="user-input" placeholder="Type a message...">
+            <button class="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+        <div class="quick-buttons" id="quick-buttons">
+            <button onclick="quickReply('what is the admission process')">Admission Process</button>
+            <button onclick="quickReply('list all courses')">Courses</button>
+            <button onclick="quickReply('what is the tuition fee')">Fees</button>
+            <button onclick="quickReply('is hostel available')">Hostel</button>
+        </div>
+    </div>
+
+    <script>
+        const chatLog = document.getElementById("chat-log");
+        const inputBox = document.getElementById("user-input");
+        const chatBox = document.getElementById("chat-box");
+
+        inputBox.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") sendMessage();
+        });
+
+        function addMessage(content, sender="bot") {
+            const div = document.createElement("div");
+            div.className = `message ${sender}`;
+            div.innerHTML = `<span>${content}</span>`;
+            chatLog.appendChild(div);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = inputBox.value.trim();
+            if (!message) return;
+            addMessage(message, "user");
+            inputBox.value = "";
+
+            // Typing indicator
+            const typing = document.createElement("div");
+            typing.className = "message bot";
+            typing.innerHTML = `<span>Bot is typing...</span>`;
+            chatLog.appendChild(typing);
+            chatLog.scrollTop = chatLog.scrollHeight;
+
+            const delay = Math.random() * 1000 + 800;
+            await new Promise(r => setTimeout(r, delay));
+
+            const res = await fetch("/get", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message })
+            });
+            const data = await res.json();
+            typing.remove();
+            addMessage(data.response, "bot");
+        }
+
+        function quickReply(msg) {
+            inputBox.value = msg;
+            sendMessage();
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle("dark");
+            chatBox.classList.toggle("dark");
+
+            // Update button icon
+            const btn = document.querySelector(".toggle-theme-btn");
+            if (chatBox.classList.contains("dark")) {
+                btn.textContent = "☀️";
+            } else {
+                btn.textContent = "🌙";
+            }
+        }
+    </script>
+</body>
+</html>
