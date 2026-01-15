@@ -1,4 +1,7 @@
-# Fine-tune RoBERTa for NLP intent classification (fine-tuning script)
+﻿"""
+Fine-tune RoBERTa for NLP intent classification (fine-tuning script)
+"""
+
 import joblib
 import pandas as pd
 import torch
@@ -19,6 +22,7 @@ y = data["tag"].tolist()
 # Encode labels
 encoder = LabelEncoder()
 y_encoded = encoder.fit_transform(y)
+
 
 # --------------------------
 # Tokenizer & Dataset
@@ -58,6 +62,7 @@ class ChatDataset(Dataset):
 dataset = ChatDataset(X, y_encoded, tokenizer)
 dataloader = DataLoader(dataset, batch_size=16, shuffle=True)
 
+
 # --------------------------
 # Model
 # --------------------------
@@ -69,6 +74,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 
 optimizer = AdamW(model.parameters(), lr=2e-5)
+
 
 # --------------------------
 # Training loop
@@ -98,6 +104,7 @@ for epoch in range(epochs):
             print(f"Batch {i+1}/{len(dataloader)} - Loss: {avg_loss:.4f}")
             running_loss = 0
 
+
 # --------------------------
 # Evaluation on training data
 # --------------------------
@@ -117,6 +124,7 @@ with torch.no_grad():
 
 accuracy = correct / total * 100
 print(f"\n✅ Training Accuracy: {accuracy:.2f}%")
+
 
 # --------------------------
 # Save model and label encoder

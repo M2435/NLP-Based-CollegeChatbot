@@ -1,4 +1,4 @@
-import joblib
+﻿import joblib
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -45,7 +45,6 @@ for name, model in models.items():
     y_pred = pipeline.predict(X_test)
     acc = accuracy_score(y_test, y_pred)
     print(f"{name} Accuracy: {acc:.2f}")
-
     if acc > best_accuracy:
         best_accuracy = acc
         best_model = pipeline
@@ -54,5 +53,4 @@ for name, model in models.items():
 # Save the best model
 joblib.dump(best_model, "chatbot_model.pkl")
 joblib.dump(encoder, "label_encoder.pkl")
-
-print(f"\n✅ Best model: {best_name} with accuracy {best_accuracy:.2f}")
+print(f"\n✓ Best model: {best_name} with accuracy {best_accuracy:.2f}")
