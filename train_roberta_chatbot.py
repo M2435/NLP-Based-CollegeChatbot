@@ -1,11 +1,11 @@
 # Fine-tune RoBERTa for NLP intent classification (fine-tuning script)
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-import torch
-from torch.utils.data import Dataset, DataLoader
-from transformers import RobertaTokenizer, RobertaForSequenceClassification
-from torch.optim import AdamW
 import joblib
+import pandas as pd
+import torch
+from sklearn.preprocessing import LabelEncoder
+from torch.optim import AdamW
+from torch.utils.data import DataLoader, Dataset
+from transformers import RobertaForSequenceClassification, RobertaTokenizer
 
 # --------------------------
 # Load intents data

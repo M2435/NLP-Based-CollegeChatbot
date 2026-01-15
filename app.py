@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, jsonify
 import os
 from pathlib import Path
+
+from flask import Flask, jsonify, render_template, request
 
 # Load .env if present
 try:
@@ -12,11 +13,11 @@ try:
 except Exception:
     # python-dotenv is optional in some environments; ignore if not installed
     pass
-import pandas as pd
 import joblib
+import pandas as pd
 import torch
 import torch.nn.functional as F
-from transformers import RobertaTokenizer, RobertaForSequenceClassification
+from transformers import RobertaForSequenceClassification, RobertaTokenizer
 
 app = Flask(__name__)
 
