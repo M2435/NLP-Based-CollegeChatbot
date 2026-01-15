@@ -1,7 +1,3 @@
 [tool.black]
 line-length = 79
-exclude = '\\n(' 
-    + 'chatbotenv' 
-    + '|roberta_chatbot_model' 
-    + '|\\.git' 
-    + ')\\n'
+exclude = '(^|/)(chatbotenv|roberta_chatbot_model|\\.git)(/|$)'
