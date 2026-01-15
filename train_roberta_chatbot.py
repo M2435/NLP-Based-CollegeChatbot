@@ -25,16 +25,17 @@ y_encoded = encoder.fit_transform(y)
 # --------------------------
 tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
+
 class ChatDataset(Dataset):
     def __init__(self, texts, labels, tokenizer, max_len=64):
         self.texts = texts
         self.labels = labels
         self.tokenizer = tokenizer
         self.max_len = max_len
-    
+
     def __len__(self):
         return len(self.texts)
-    
+
     def __getitem__(self, idx):
         text = str(self.texts[idx])
         label = self.labels[idx]
@@ -44,13 +45,14 @@ class ChatDataset(Dataset):
             max_length=self.max_len,
             padding="max_length",
             truncation=True,
-            return_tensors="pt"
+            return_tensors="pt",
         )
         return {
             "input_ids": encoding["input_ids"].flatten(),
             "attention_mask": encoding["attention_mask"].flatten(),
-            "labels": torch.tensor(label, dtype=torch.long)
+            "labels": torch.tensor(label, dtype=torch.long),
         }
+
 
 # Create dataset and dataloader
 dataset = ChatDataset(X, y_encoded, tokenizer)
@@ -60,8 +62,7 @@ dataloader = DataLoader(dataset, batch_size=16, shuffle=True)
 # Model
 # --------------------------
 model = RobertaForSequenceClassification.from_pretrained(
-    "roberta-base",
-    num_labels=len(encoder.classes_)
+    "roberta-base", num_labels=len(encoder.classes_)
 )
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -82,19 +83,17 @@ for epoch in range(epochs):
         input_ids = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
-        
+
         outputs = model(
-            input_ids=input_ids,
-            attention_mask=attention_mask,
-            labels=labels
+            input_ids=input_ids, attention_mask=attention_mask, labels=labels
         )
         loss = outputs.loss
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        
+
         running_loss += loss.item()
-        if (i+1) % 10 == 0:
+        if (i + 1) % 10 == 0:
             print(f"Batch {i+1}/{len(dataloader)} - Loss: {running_loss/10:.4f}")
             running_loss = 0
 
@@ -109,7 +108,7 @@ with torch.no_grad():
         input_ids = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
-        
+
         outputs = model(input_ids=input_ids, attention_mask=attention_mask)
         preds = torch.argmax(outputs.logits, dim=1)
         correct += (preds == labels).sum().item()

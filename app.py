@@ -5,7 +5,8 @@ from pathlib import Path
 # Load .env if present
 try:
     from dotenv import load_dotenv
-    env_path = Path('.') / '.env'
+
+    env_path = Path(".") / ".env"
     if env_path.exists():
         load_dotenv(dotenv_path=env_path)
 except Exception:
@@ -33,6 +34,7 @@ model.eval()
 # Load intents for response lookup
 data = pd.read_csv("intents.csv")
 
+
 # --------------------------
 # Flask routes
 # --------------------------
@@ -45,6 +47,7 @@ def home():
 def health():
     return jsonify({"status": "ok"})
 
+
 def get_bot_response(user_input):
     # Tokenize user input
     encoding = tokenizer.encode_plus(
@@ -53,7 +56,7 @@ def get_bot_response(user_input):
         max_length=64,
         padding="max_length",
         truncation=True,
-        return_tensors="pt"
+        return_tensors="pt",
     )
     input_ids = encoding["input_ids"].to(device)
     attention_mask = encoding["attention_mask"].to(device)
@@ -72,11 +75,13 @@ def get_bot_response(user_input):
     else:
         return "I'm not sure I understand. Can you rephrase?"
 
+
 @app.route("/get", methods=["POST"])
 def chatbot_response():
     user_input = request.json.get("message", "")
     reply = get_bot_response(user_input)
     return jsonify({"response": reply})
+
 
 if __name__ == "__main__":
     host = os.environ.get("HOST", "0.0.0.0")

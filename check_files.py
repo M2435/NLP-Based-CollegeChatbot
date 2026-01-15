@@ -1,4 +1,4 @@
 import os
 
 print("Files in current directory:")
-print(os.listdir('.'))
+print(os.listdir("."))
