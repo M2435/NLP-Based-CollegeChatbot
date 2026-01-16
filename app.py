@@ -1,9 +1,16 @@
 ﻿import os
 from pathlib import Path
 
+import joblib
+import pandas as pd
+import torch
+import torch.nn.functional as F
+# Third-party imports
 from flask import Flask, jsonify, render_template, request
+from huggingface_hub import snapshot_download
+from transformers import RobertaForSequenceClassification, RobertaTokenizer
 
-# Load .env if present
+# Load .env if present (optional)
 try:
     from dotenv import load_dotenv
 
@@ -11,16 +18,8 @@ try:
     if env_path.exists():
         load_dotenv(dotenv_path=env_path)
 except Exception:
-    # python-dotenv is optional in some environments.
-    # Ignore if not installed.
+    # python-dotenv is optional in some environments; ignore if not installed.
     pass
-
-import joblib
-import pandas as pd
-import torch
-import torch.nn.functional as F
-from transformers import RobertaForSequenceClassification, RobertaTokenizer
-from huggingface_hub import snapshot_download
 
 app = Flask(__name__)
 
